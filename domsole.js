@@ -9,6 +9,7 @@ Domsole = (function($) {
         response = input.find('input');
 
         output.attr('disabled', 'disabled');
+        input.submit(defaultHandler);
     };
 
     var defaultHandler = function() {
