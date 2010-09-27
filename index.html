@@ -2,9 +2,25 @@
 <html>
     <head>
         <title>Battleship Demo</title>
-        <script src="battleship.js" type="text/javascript" charset="utf-8" async defer></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"
+                type="text/javascript" charset="utf-8"></script>
+        <script src="domsole.js" type="text/javascript" charset="utf-8"></script>
+        <script src="battleship.js" type="text/javascript" charset="utf-8"></script>
     </head>
     <body>
-       Empty file. 
+        <textarea id="domsole_out"
+           style="
+                background-color: #FFF;
+                border: 1px solid #000;
+                color: #333;
+                font-size: 14px;
+                height: 350px;
+                overflow: auto;
+                width: 600px;
+            "
+        ></textarea>
+        <form id="domsole_in" action="#">
+            <input type="text" style="width: 600px;" />
+        </form>
     </body>
 </html>
