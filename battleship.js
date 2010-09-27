@@ -1,34 +1,64 @@
-var Boat = function( owner, startCoord, orientation, length ) {
+HORIZONTAL = 0;
+VERTICAL   = 1;
+
+function Boat( owner, startCoord, orientation, length ) {
     
-    var owner = owner;
-    var startCoord = startCoord;
-    var orientation = orientation;
-    var length = length;
-    var boat = [];
+    this.owner = owner;
+    this.startCoord = startCoord;
+    this.orientation = orientation;
+    this.length = length;
+    this.boat = [];
+
+    this.startX = function() {
+        return startCoord[0];
+    }
+
+    this.startY = function() {
+        return startCoord[1];
+    }
+
+    this.coordinates = function() {
+        var coords = [];
+        for(var i=0; i < length; i++) {
+            if (orientation == HORIZONTAL) {
+                coords.push([this.startX()+i, this.startY()]);
+            } else {
+                coords.push([this.startX(), this.startY()+i]);
+            }
+        }
+        return coords;
+	}
     
     /* Given a coordinate, return true if the coordinate overlaps the boat's position, false otherwise */
-    function isAt(coord) {
-        
+    this.isAt = function(coord) {
+        var coords = this.coordinates();
+        for(var i=0; i < coords.length; i++) {
+            if (coord.toString() == coords[i].toString()) {
+                return true;
+            }
+        }
+        return false;
     }
     
     /* Given a coordinate, mark that spot as hit */
-    function takeHit(coord) {     
+    this.takeHit = function(coord) {
         
     }
     
     /* If all pieces of a boat have been hit, return true */
-    function isSunk() {
+    this.isSunk = function() {
         
     }
     
 }
 
-function Board = function(owner, size) {
+function Board(owner, size) {
     
-    var grid = new Array(size);
+    this.grid = new Array(size);
     
-    console.log(grid);
+    console.log(this.grid);
     
 }
 
 var board = new Board('', 5);
+var boat = new Boat(null, [1,1], HORIZONTAL, 3);
