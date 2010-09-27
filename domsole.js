@@ -46,7 +46,4 @@ Domsole = (function($) {
 
 $(document).ready(function() {
     Domsole.init('domsole_out', 'domsole_in');
-    Domsole.prompt("What's your name?", function(name) {
-        Domsole.write("Cool. Hi, " + name);
-    });
 });
