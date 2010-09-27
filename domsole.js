@@ -12,7 +12,8 @@ Domsole = (function($) {
         input.submit(defaultHandler);
     };
 
-    var defaultHandler = function() {
+    var defaultHandler = function(event) {
+        event.preventDefault();
         var text = response.val();
         response.val('');
         write('> ' + text);
@@ -21,7 +22,8 @@ Domsole = (function($) {
     var prompt = function(question, handler) {
         write(question);
         input.unbind('submit');
-        input.submit(function() {
+        input.submit(function(event) {
+            event.preventDefault();
             var text = response.val();
             response.val('');
             write('> ' + text);
