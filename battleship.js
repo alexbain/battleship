@@ -6,11 +6,10 @@ EMPTY_VAL = '0';
 BOAT_VAL  = 'B';
 HIT_VAL   = 'X';
 
-BOAT_SIZES = [2];
+BOATS = {"Cruiser": 2, "Submarine": 3};
 
-function Boat( owner, startCoord, orientation, length ) {
+function Boat( startCoord, orientation, length ) {
     
-    this.owner = owner;
     this.startCoord = startCoord;
     this.orientation = orientation;
     this.length = length;
@@ -212,9 +211,32 @@ function Player() {
     
     /* Setup player - ask for name, prompt for inserting boats */
     this.setup = function() {
-        // prompt for name
-        
-        // prompt for boats
+        this.name = Domsole.ask("What's your name, Playa?")
+        Domsole.write("Alright, " + name + " you shall be.");
+        for (var boat in BOATS) {
+            if(BOATS.hasOwnProperty(boat)) {
+                this.getBoat(boat);
+            }
+        }
+        Domsole.write("All done, " + this.name);
+    }
+
+    this.getBoat = function(boat) {
+        var length = BOATS[boat];
+        var text = Domsole.ask(
+            "Place your " + boat + "(" + length + "): " + "(x y H/V)")
+        var pos = text.split(' ');
+        var x = parseInt(pos[0], 10);
+        var y = parseInt(pos[1], 10);
+        var o;
+        if (pos[2] == 'H') {
+            o = HORIZONTAL;
+        } else {
+            o = VERTICAL;
+        }
+        var newBoat = new Boat([x, y], o, length);
+        this.boats.push(newBoat);
+        this.board.placeBoat(newBoat);
     }
     
     /* Does the player have any boats remaining? */
@@ -238,23 +260,22 @@ function Game() {
     this.takeTurn = function(currentPlayer, otherPlayer) {
         Domsole.write(currentPlayer.name + "'s turn:\n");
         Domsole.write(otherPlayer.printBoard());
-        Domsole.prompt("Where would you like to take a shot? Valid input is: x, y", function (text) { 
-            var coord = text.split(",");
-            coord[0] = parseInt(coord[0]);
-            coord[1] = parseInt(coord[1]);
-            
-            Domsole.write(otherPlayer.takeShotAt(coord));
-            
-            Domsole.write(otherPlayer.printBoard());
-            
-            /* Is the game over now? */
-            if(!otherPlayer.isStillAlive()) {
-                Domsole.write(currentPlayer.name + " wins!");
-            } else {
-                this.takeTurn(otherPlayer, currentPlayer);
-            }
-                     
-        });
+        var coord = Domsole.ask("Where would you like to take a shot? Valid input is: x, y");
+        
+        coord = coord.split(",");
+        coord[0] = parseInt(coord[0]);
+        coord[1] = parseInt(coord[1]);
+        
+        Domsole.write(otherPlayer.takeShotAt(coord));
+        
+        Domsole.write(otherPlayer.printBoard());
+        
+        /* Is the game over now? */
+        if(!otherPlayer.isStillAlive()) {
+            Domsole.write(currentPlayer.name + " wins!");
+        } else {
+            this.takeTurn(otherPlayer, currentPlayer);
+        }
     }
     
     
@@ -290,8 +311,6 @@ function Game() {
         - if game over, announce winner
     */
     
-    
-    
 }
 
 $(document).ready(function () { 
@@ -311,18 +330,3 @@ $(document).ready(function () {
     */
 
 })
-
-
-//boat.showDamage();
-//boat.takeHit([2,1]);
-//boat.showDamage();
-
-
-/* var board = new Board(5);
-board.initGrid();
-
-
-
-board.placeBoat(boat);
-board.printGrid();
-*/
