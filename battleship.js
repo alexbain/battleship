@@ -224,12 +224,12 @@ function Player() {
     this.getBoat = function(boat) {
         var length = BOATS[boat];
         var text = Domsole.ask(
-            "Place your " + boat + "(" + length + "): " + "(x y H/V)")
+            "Place your " + boat + "(" + length + "): " + "(x y h/v)")
         var pos = text.split(' ');
         var x = parseInt(pos[0], 10);
         var y = parseInt(pos[1], 10);
         var o;
-        if (pos[2] == 'H') {
+        if (pos[2] == 'h') {
             o = HORIZONTAL;
         } else {
             o = VERTICAL;
