@@ -15,7 +15,7 @@ Domsole = (function($) {
 
     var write = function(text) {
         output.append(text + "\n");
-        output.animate({scrollTop: output.height()}, 500);
+        output.scrollTop(9999999999);
     };
 
     return {
