@@ -5,11 +5,10 @@ BOARD_SIZE = 5;
 EMPTY_VAL = '0';
 HIT_VAL   = 'X';
 
-BOAT_SIZES = [2];
+BOATS = {"Cruiser": 2, "Submarine": 3};
 
-function Boat( owner, startCoord, orientation, length ) {
+function Boat( startCoord, orientation, length ) {
     
-    this.owner = owner;
     this.startCoord = startCoord;
     this.orientation = orientation;
     this.length = length;
@@ -172,6 +171,7 @@ function Board(size) {
 function Player() {
     this.name = "";
     this.board = new Board(BOARD_SIZE);
+    this.boats = [];
     
     /* Function that takes a set of coordinates as an argument and returns whether or not those coordinates
         hits one of the player's boats */
@@ -197,9 +197,32 @@ function Player() {
     
     /* Setup player - ask for name, prompt for inserting boats */
     this.setup = function() {
-        // prompt for name
-        
-        // prompt for boats
+        this.name = Domsole.ask("What's your name, Playa?")
+        Domsole.write("Alright, " + name + " you shall be.");
+        for (var boat in BOATS) {
+            if(BOATS.hasOwnProperty(boat)) {
+                this.getBoat(boat);
+            }
+        }
+        Domsole.write("All done, " + this.name);
+    }
+
+    this.getBoat = function(boat) {
+        var length = BOATS[boat];
+        var text = Domsole.ask(
+            "Place your " + boat + "(" + length + "): " + "(x y [H/V])")
+        var pos = text.split(' ');
+        var x = parseInt(pos[0], 10);
+        var y = parseInt(pos[1], 10);
+        var o;
+        if (pos[2] == 'H') {
+            o = HORIZONTAL;
+        } else {
+            o = VERTICAL;
+        }
+        var newBoat = new Boat([x, y], o, length);
+        this.boats.push(newBoat);
+        this.board.placeBoat(newBoat);
     }
 }
 
@@ -225,26 +248,11 @@ function Game() {
 
     
     */
-    
+
+    this.player1.setup();
+    this.player1.board.display();
 }
 
-var player = new Player();
-var boat = new Boat(null, [1,1], HORIZONTAL, 3);
-player.board.placeBoat(boat);
-
-player.takeShotAt([1,1]);
-player.takeShotAt([3,2]);
-
-//boat.showDamage();
-//boat.takeHit([2,1]);
-//boat.showDamage();
-
-
-/* var board = new Board(5);
-board.initGrid();
-
-
-
-board.placeBoat(boat);
-board.printGrid();
-*/
+$(document).ready(function() {
+    game = new Game();
+});
