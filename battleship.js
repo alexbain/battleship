@@ -260,15 +260,22 @@ function Game() {
     this.takeTurn = function(currentPlayer, otherPlayer) {
         Domsole.write(currentPlayer.name + "'s turn:\n");
         Domsole.write(otherPlayer.printBoard());
-        Domsole.prompt("Where would you like to take a shot? Valid input is: x, y", function (text) { 
-            var coord = text.split(",");
-            coord[0] = parseInt(coord[0]);
-            coord[1] = parseInt(coord[1]);
-            
-            Domsole.write(otherPlayer.takeShotAt(coord));
-            
-            Domsole.write(otherPlayer.printBoard());         
-        });
+        var coord = Domsole.ask("Where would you like to take a shot? Valid input is: x, y");
+        
+        coord = coord.split(",");
+        coord[0] = parseInt(coord[0]);
+        coord[1] = parseInt(coord[1]);
+        
+        Domsole.write(otherPlayer.takeShotAt(coord));
+        
+        Domsole.write(otherPlayer.printBoard());
+        
+        /* Is the game over now? */
+        if(!otherPlayer.isStillAlive()) {
+            Domsole.write(currentPlayer.name + " wins!");
+        } else {
+            this.takeTurn(otherPlayer, currentPlayer);
+        }
     }
     
     
@@ -305,7 +312,21 @@ function Game() {
     */
     
 }
+
 $(document).ready(function () { 
     var game = new Game();
     game.init();
+
+    /*
+    var player = new Player();
+    var boat = new Boat(null, [1,1], HORIZONTAL, 3);
+    player.board.placeBoat(boat);
+
+    //player.takeShotAt([1,1]);
+    //player.takeShotAt([3,2]);
+    
+    console.log(player.printBoard(true));
+    
+    */
+
 })
