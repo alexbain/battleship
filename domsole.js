@@ -9,30 +9,13 @@ Domsole = (function($) {
         response = input.find('input');
 
         output.attr('disabled', 'disabled');
-        input.submit(defaultHandler);
     };
 
-    var defaultHandler = function(event) {
-        event.preventDefault();
-        var text = response.val();
-        response.val('');
-        write('> ' + text);
-    };
-
-    var prompt = function(question, handler) {
+    var ask = function(question) {
         write(question);
-        input.unbind('submit');
-        input.submit(function(event) {
-            event.preventDefault();
-            var text = response.val();
-            response.val('');
-            write('> ' + text);
-            if (typeof (handler) !== 'undefined') {
-                handler(text);
-            }
-            input.unbind('submit');
-            input.submit(defaultHandler);
-        });
+        var text = prompt(question);
+        write('> ' + text);
+        return text;
     };
 
     var write = function(text) {
@@ -41,8 +24,8 @@ Domsole = (function($) {
     };
 
     return {
+        ask: ask,
         init: init,
-        prompt: prompt,
         write: write
     };
 })(jQuery);
