@@ -245,7 +245,15 @@ function Game() {
             
             Domsole.write(otherPlayer.takeShotAt(coord));
             
-            Domsole.write(otherPlayer.printBoard());         
+            Domsole.write(otherPlayer.printBoard());
+            
+            /* Is the game over now? */
+            if(!otherPlayer.isStillAlive()) {
+                Domsole.write(currentPlayer.name + " wins!");
+            } else {
+                this.takeTurn(otherPlayer, currentPlayer);
+            }
+                     
         });
     }
     
@@ -285,17 +293,23 @@ function Game() {
     
     
 }
-/*
-var player = new Player();
-var boat = new Boat(null, [1,1], HORIZONTAL, 3);
-player.board.placeBoat(boat);
 
-player.takeShotAt([1,1]);
-player.takeShotAt([3,2]);
-*/
 $(document).ready(function () { 
     var game = new Game();
     game.init();
+
+    /*
+    var player = new Player();
+    var boat = new Boat(null, [1,1], HORIZONTAL, 3);
+    player.board.placeBoat(boat);
+
+    //player.takeShotAt([1,1]);
+    //player.takeShotAt([3,2]);
+    
+    console.log(player.printBoard(true));
+    
+    */
+
 })
 
 
