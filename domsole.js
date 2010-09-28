@@ -1,13 +1,8 @@
 Domsole = (function($) {
     var output;
-    var input;
-    var response;
 
-    var init = function(outname, inname) {
+    var init = function(outname) {
         output = $('#'+outname);
-        input = $('#'+inname);
-        response = input.find('input');
-
         output.attr('disabled', 'disabled');
     };
 
@@ -31,5 +26,5 @@ Domsole = (function($) {
 })(jQuery);
 
 $(document).ready(function() {
-    Domsole.init('domsole_out', 'domsole_in');
+    Domsole.init('domsole_out');
 });
