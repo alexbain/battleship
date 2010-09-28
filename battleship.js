@@ -3,6 +3,7 @@ VERTICAL   = 1;
 BOARD_SIZE = 5;
 
 EMPTY_VAL = '0';
+BOAT_VAL  = 'B';
 HIT_VAL   = 'X';
 
 BOAT_SIZES = [2];
@@ -121,8 +122,10 @@ function Board(size) {
         }
     };
     
-    /* Prints the grid to the console */
-    this.display = function() {
+    /* Returns a string representing the grid */
+    /* If mine is true, display the locations of your boats so you know where they are */
+    this.display = function(mine) {
+        var grid = "";
         var row = "";
         for(var i=0; i<this.size; i++) {
             for(var j=0; j<this.size; j++) {
@@ -135,13 +138,21 @@ function Board(size) {
                     if(boat.isHitAt([i,j])) {
                         row += HIT_VAL;
                     } else {
-                        row += EMPTY_VAL;
+                        if(mine) {
+                            row += BOAT_VAL;
+                        } else {
+                            row += EMPTY_VAL;                            
+                        }
+
                     }
                 }
             }
-            console.log(row);
+            row += "\n";
+            grid += row;
             row = '';
         }
+        
+        return grid;
     };
     
     /* Places a boat on the map */
@@ -170,29 +181,33 @@ function Board(size) {
 }
 
 function Player() {
-    this.name = "";
+    this.name = "Default";
     this.board = new Board(BOARD_SIZE);
+    this.boats = [];
     
-    /* Function that takes a set of coordinates as an argument and returns whether or not those coordinates
-        hits one of the player's boats */
+    /* Function that takes a set of coordinates as an argument and returns a string with a status message */
     this.takeShotAt = function(coord) {
+        var status  = "";
         var boat = this.board.hasBoat(coord);
         if(boat) {
             boat.takeHit(coord);
             if(boat.isSunk()) {
-                console.log("You sunk the boat!");
+                status = "You sunk the boat!";
             } else {
-                console.log("Hit!");
+                status = "Hit!";
             }
         } else {
             this.board.markAsMiss(coord);
-            console.log("Miss!");
+            status = "Miss!";
         }
+        
+        return status;
     }
     
-    /* Prints the current player's game board */
-    this.printBoard = function() { 
-        this.board.display();
+    /* Return's a string representing the game board */
+    /* If mine is true, this will display the location of all the player's boats */
+    this.printBoard = function(mine) { 
+        return this.board.display(mine);
     }
     
     /* Setup player - ask for name, prompt for inserting boats */
@@ -201,11 +216,54 @@ function Player() {
         
         // prompt for boats
     }
+    
+    /* Does the player have any boats remaining? */
+    this.isStillAlive = function() {
+        for(var i=0; i<this.boats.length; i++) {
+            if(typeof this.boats[i] == "object" && !this.boats[i].isSunk()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
 }
 
 function Game() {
     this.player1 = new Player();
     this.player2 = new Player();
+    this.gameOver = false;
+
+    
+    this.takeTurn = function(currentPlayer, otherPlayer) {
+        Domsole.write(currentPlayer.name + "'s turn:\n");
+        Domsole.write(otherPlayer.printBoard());
+        Domsole.prompt("Where would you like to take a shot? Valid input is: x, y", function (text) { 
+            var coord = text.split(",");
+            coord[0] = parseInt(coord[0]);
+            coord[1] = parseInt(coord[1]);
+            
+            Domsole.write(otherPlayer.takeShotAt(coord));
+            
+            Domsole.write(otherPlayer.printBoard());         
+        });
+    }
+    
+    
+    
+    this.init = function() {
+        Domsole.write("Welcome to JavaScript Battleship!\n\n");
+        
+        this.player1.setup();
+        this.player2.setup();
+        
+        var currentPlayer = this.player1;
+        var otherPlayer   = this.player2;
+        
+        this.takeTurn(this.player1, this.player2);        
+    }
+    
+    
     
     /*
         - Welcome message
@@ -222,18 +280,24 @@ function Game() {
         - check if game over
 
         - if game over, announce winner
-
-    
     */
     
+    
+    
 }
-
+/*
 var player = new Player();
 var boat = new Boat(null, [1,1], HORIZONTAL, 3);
 player.board.placeBoat(boat);
 
 player.takeShotAt([1,1]);
 player.takeShotAt([3,2]);
+*/
+$(document).ready(function () { 
+    var game = new Game();
+    game.init();
+})
+
 
 //boat.showDamage();
 //boat.takeHit([2,1]);
